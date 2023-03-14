@@ -34,8 +34,23 @@ module.exports.signUp = async (req, res) => {
     }
 }
 
-module.exports.loginUser = (req, res) => {
+module.exports.loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    let user;
+    try {
+        user = await User.findOne({ email });
+    } catch (e) {
+        res.status(500).json({ "error": e });
+    }
 
+    if (!user) return res.status(400).json({ 'error': "Please Login with correct credentials" });
+
+    const passwordFlag = bcrypt.compareSync(password, user.password);
+
+    if (!passwordFlag) return res.status(400).json({ 'error': "Please Login with correct credentials" });
+
+    const authToken = jwt.sign({ "userID": user._id }, JWT_SECRET);
+    res.status(200).json({ 'msg': "Login Sucessfull", authToken });
 }
 
 module.exports.getUser = (req, res) => {
