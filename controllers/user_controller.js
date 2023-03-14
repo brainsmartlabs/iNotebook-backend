@@ -1,11 +1,13 @@
+const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
-const JWT_SECRET = "BalajiIsAGoodBoy"
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports.signUp = async (req, res) => {
-
     let user;
     try {
         user = await User.findOne({ email: req.body.email });
