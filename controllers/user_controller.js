@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const User = require('../models/User');
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
+const JWT_SECRET = "BalajiIsAGoodBoy"
 
 module.exports.signUp = async (req, res) => {
+
     let user;
     try {
         user = await User.findOne({ email: req.body.email });
@@ -10,15 +13,20 @@ module.exports.signUp = async (req, res) => {
         return res.status(400).json({ errorMsg: "Some Error at the database Occured", e });
     }
 
-
     if (user) {
         return res.status(400).json({ error: "Sorry, user Already Exisits with the email" });
     }
-
     try {
-        user = new User(req.body);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        user = new User({
+            name: req.body.name,
+            email: req.body.email,
+            password: hashedPassword
+        });
         await user.save();
-        res.status(200).json(user);
+        const authToken = jwt.sign({ "userID": user._id }, JWT_SECRET);
+        res.status(200).json({ authToken });
     } catch (e) {
         res.status(500).json({ error: e })
     }
