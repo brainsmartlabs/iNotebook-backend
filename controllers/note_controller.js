@@ -1,4 +1,3 @@
-
 const Note = require('../models/Note.js');
 const User = require('../models/User.js');
 
@@ -9,13 +8,9 @@ module.exports.fetchAllNotes = async (req, res) => {
 
 module.exports.addNote = async (req, res) => {
     const { title, description, tag } = req.body;
-
-
     try {
         let userID = req.userID;
-        let user;
-        user = await User.findById(userID).select("-password");
-
+        let user = await User.findById(userID).select("-password");
         if (!user) return res.status(401).json({ 'msg': "Unautherized access" });
 
         let note = new Note({
