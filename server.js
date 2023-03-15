@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user_routes.js');
-const notesRoutes = require('./routes/notes_routes.js');
+const noteRoutes = require('./routes/note_routes.js');
 
 dotenv.config();
 
@@ -16,3 +16,4 @@ mongoose.connect(process.env.DB_URL)
 app.use(express.json()); //Else JSON in the requests will not be parsed
 
 app.use('/api/auth', userRoutes);
+app.use('/api/notes', noteRoutes);
