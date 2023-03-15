@@ -53,8 +53,15 @@ module.exports.loginUser = async (req, res) => {
     res.status(200).json({ 'msg': "Login Sucessfull", authToken });
 }
 
-module.exports.getUser = (req, res) => {
-
+module.exports.getUser = async (req, res) => {
+    let userID = req.userID;
+    let user;
+    try {
+        user = await User.findById(userID).select("-password");
+        res.status(200).json(user);
+    } catch (e) {
+        res.status(500).json({ "error": e });
+    }
 }
 
 module.exports.logoutUser = (req, res) => {
