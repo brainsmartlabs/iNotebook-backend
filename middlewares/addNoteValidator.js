@@ -2,7 +2,7 @@ const { body, validationResult } = require('express-validator');
 
 const addNoteValidationRules = () => {
     return [
-        body('title', 'Enter a Valid title').exists(),
+        body('title', 'Title should be minimum 5 charecters').isLength({ min: 5 }),
         body('description', 'Description should be atleast 9 charecters').isLength({ min: 9 }),
     ]
 }
