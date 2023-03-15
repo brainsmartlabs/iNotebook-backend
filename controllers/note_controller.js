@@ -9,14 +9,21 @@ module.exports.fetchAllNotes = async (req, res) => {
 
 module.exports.addNote = async (req, res) => {
     const { title, description, tag } = req.body;
-    let userID = req.userID;
-    let user;
+
 
     try {
+        let userID = req.userID;
+        let user;
         user = await User.findById(userID).select("-password");
+
+        if (!user) return res.status(401).json({ 'msg': "Unautherized access" });
+
         let note = new Note({
-            title, description, tag, user: req.userID
-        })
+            title,
+            description,
+            tag,
+            user: userID
+        });
         note = await note.save()
 
         res.status(200).json({ 'msg': "added note sucessfully", note })
