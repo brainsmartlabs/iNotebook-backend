@@ -2,7 +2,7 @@ const Note = require('../models/Note.js');
 const User = require('../models/User.js');
 
 module.exports.fetchAllNotes = async (req, res) => {
-    const notes = await Note.find({ user: req.user.id });
+    const notes = await Note.find({ user: req.userID });
     res.status(200).json(notes);
 }
 
